@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec= "http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8" />
+	<title>post</title>
+</head>
+<body>
+<div style="padding-top:3%;">
+	<span style="float:left;padding-left:5%;">My Blog Application</span>
+
+	<span style="float:right; padding-right:5%;"><a th:if="${post.author == #authentication.name or #authorization.expression('hasAuthority(''ADMIN'')')}"  th:href="@{/deletePost{postId}(postId=${post.id})}">Delete</a></span>
+	<span style="float:right; padding-right:5%;"><a th:if="${post.author == #authentication.name or #authorization.expression('hasAuthority(''ADMIN'')')}" th:href="@{/updatePost{postId}(postId=${post.id})}">Edit</a></span>
+
+
+</div>
+
+</div>
+<h1 th:text="${post.title}" style="text-align:center;"></h1>
+<p style="text-align:center;" ><span th:text="${post.author}"></span> , <span th:text="${post.createdAt}"></span></p>
+
+<div style="padding-left:5%; padding-right:5%;"><span><b>Tag/Tags :</b></span>
+	<span th:each="tag : ${post.tags}">
+<span th:text=${tag.name}></span>
+<span>, </span>
+</span>
+</div>
+<p style="padding-left:5%; padding-right:5%;" th:text="${post.content}"></p>
+
+
+<hr>
+<div >
+	<form style="padding-left:5%;" th:action="@{/addComment{postId}(postId=${post.id})}" method="post">
+		<h4>Add Your Comment</h4>
+		<input type="text" placeholder="your name" name="name" required><br>
+		<input type="email" placeholder="your email Id" name="email" required><br>
+		<textarea placeholder="type your comment" name="comment" required></textarea><br>
+		<input type="submit">
+	</form>
+</div>
+<center><h4>---All Comments---</h4></center>
+<div style="padding-left:5%;" th:each="comment: ${comments}">
+	<b>Name : </b><span th:text="${comment.name}"></span>
+	<b>Email : </b><span th:text="${comment.email}"></span>
+	<b>CreatedAt :</b><span th:text="${comment.created_at}"></span>
+	<b>UpdatedAt :</b><span th:text="${comment.updated_at}"></span>
+	<form th:if="${post.author == #authentication.name }" th:action="@{/deleteComment/{commentId}/{postId}(commentId=${comment.id}, postId=${post.id})}" method="post"><input type="submit" value="delete"></form>
+	<br>
+	<b>Comment :</b><span th:text="${comment.comment}"></span>
+	<br>
+	<form th:if="${post.author == #authentication.name }" th:action="@{/updateComment/{commentId}/{postId}(commentId=${comment.id}, postId=${post.id})}" method="post">
+		<textarea type="text" placeholder="update your comment" name="updatedComment"></textarea>
+		<input type="submit" value="update"></form>
+	<br>
+	<br>
+</div>
+
+
+</body>
+</html>

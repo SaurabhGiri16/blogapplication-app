@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>User Login</title>
+	<style>
+	#loginform{
+	display: inline-block;
+	text-align:center;
+	padding-left:40%;
+	padding-top:6%;
+
+	}
+
+	</style>
+</head>
+<body>
+
+<form th:action="@{/authenticateTheUser}" th:method="post">
+	<div id="loginform">
+		<h1>Login</h1>
+		<div>
+			<div th:if ="${param.error}" ><i>Invalid credential</i></div>
+			<input type="email" name="username" required placeholder="Email">
+		</div>
+		<br>
+		<div>
+			<input type="password" name="password" required placeholder="Password">
+		</div>
+		<br>
+		<div>
+			<input type="submit" value="Submit">
+		</div>
+		<br>
+		<div>
+			<span th:text="${WrongIdPassword}" style="color:red;"></span>
+		</div>
+		<br>
+		<div>
+			<p>Doesn't have account? <a href="/register" style="text-decoration:none;">Create one</a></p>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

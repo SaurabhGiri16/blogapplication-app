@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>Home</title>
+	<style>
+body {
+	padding: 25px 60px 10px 55px;
+}
+span>h1 {
+	float: left;
+	padding-right: 3%;
+}
+
+a {
+	margin: 10px;
+	text-decoration: none;
+	font-size: 20px;
+}
+
+#filter {
+	padding-left: 80%;
+}
+
+#sortBy {
+	float: right;
+	height: 30px;
+	width: 120px;
+}
+
+.post {
+	border: 2px solid black;
+	display: inline-block;
+	width: 555px;
+	height: 202px;
+}
+</style>
+</head>
+<body>
+
+<div>
+	<span><h1>My Blog Application</h1></span>
+	
+	<span>
+		<a href="http://localhost:8080/newPost" style="color: gray; float: right;" >&#128221;write</a></span> <span><a
+		href="/login" style="float: right;">login</a></span>
+	<form th:action ="@{/logout}" method="post"><button type="submit">logout</button></form>
+</div>
+<br>
+<div>
+		<span style="float: right;"><form action="/">
+				<input type="search" name="search"
+					   placeholder="Search by Author, Title, and Tag" required
+					   style="width: 250px;"> <input type="hidden">
+			</form></span>
+	<span><form th:action="@{'/'}">
+			 <select name= "sortField" value= "publishedAt" onchange="this.form.submit()">
+			 <option value= "publishedAt" ></option>
+			 </select>
+
+				<select name="order" id="sortBy" onchange="this.form.submit()">
+					<option><b>Sort by Publish Date</b></option>
+					<option value="asc">Sort By Older Post</option>
+					<option value="desc">Sort By Newer Post</option>
+					</optgroup>
+				</select>
+			</form></span>
+</div>
+
+
+<form th:action="@{'/'}">
+	<select name="authorId" multiple="multiple">
+		<optgroup label="Author">
+			<option name="author" th:each="entry: ${authorNames}"
+					th:value="${entry.key}" th:text="${entry.value}"></option>
+		</optgroup>
+	</select> <select name="publishedAtId" multiple="multiple"><optgroup
+		label="Published DateTime">
+	<option name="publishedAt" th:each="entry : ${dates}"
+			th:value="${entry.key}" th:text="${entry.value}"></option>
+</optgroup></select> <select name="tagId" multiple="multiple"><optgroup
+		label="Tags">
+	<option name="tagId" th:each="entry : ${tags}"
+			th:value="${entry.key}" th:text="${entry.value}"></option>
+</optgroup>
+</select> <input type="submit" value="Filter" style="display: none;">
+</form>
+</div>
+<span style="padding-left: 70%;"><form action="/">
+			<input type="submit" value="Reset Filter">
+		</form></span>
+
+<span><a th:each="variable: ${posts}" class="post"
+		 th:href="@{/post{postId}(postId=${variable.id})}">
+			<h3 th:text="${variable.title}"
+				style="padding-left: 2%; color: black;"></h3>
+			<p style="margin-top: -3%;">
+				<span th:text="${variable.author}"
+					  style="padding-left: 2%; color: black;">, </span> <span
+					th:text="${variable.published_at}"
+					style="padding-left: 2%; color: black; font-size: 15px;"></span>
+			</p> <span
+		style="padding-left: 2%; color: black; font-size: 15px; margin-top: -2%;"><b>Tag/Tags:</b></span>
+			<span th:each="tag:${variable.tags}"
+				  style="padding-left: 2%; color: black; font-size: 15px; margin-top: -2%;">
+				<span th:text="${tag.name}"></span>
+		</span>
+			<p th:text="${variable.excerpt}"
+			   style="padding-left: 2%; color: black; font-size: 15px"></p> <br>
+	</a> </span>
+
+
+<footer style="padding-bottom: 2%">
+	<div th:if="${order == ''}">
+		<a th:href="@{'/?start='+${(currentPage-1)*10+1}+'&limit=10'}"><button
+				th:if="${currentPage > 0}">&lt;&lt;previous</button></a> <a
+			th:href="@{'/?start='+${currentPage*10+11}+'&limit=10'}"><button
+			th:if="${currentPage < totalPages-1}" style="float: right;">next>></button></a>
+	</div>
+	<div th:if="${order != ''}">
+
+		<a
+				th:href="@{'/?sortField=publishedAt'+'&order='+${order}+'&start='+${(currentPage-1)*10+1}+'&limit=10'}"><button
+				th:if="${currentPage > 0}">&lt;&lt;previous</button></a> <a
+			th:href="@{'/?sortField=publishedAt'+'&order='+${order}+'&start='+${currentPage*10+11}+'&limit=10'}"><button
+			th:if="${currentPage < totalPages-1}" style="float: right;">next>></button></a>
+	</div>
+</footer>
+
+</body>
+</html>

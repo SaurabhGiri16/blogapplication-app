@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>Edit Post</title>
+</head>
+<body>
+<form th:action="@{/updatePost{postId}(postId=${post.id})}" th:method="post" >
+	<h1 style="text-align:center;">Edit post</h1><a href="/" style="float:right;padding-right:7%;">home</a>
+	<p style="padding-left:5%;"><input type="text" name="author" placeholder="Author" required th:value="${post.author}" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"></p>
+	<p style="padding-left:5%;"><input type="text" name="author" placeholder="Author" readonly th:value="${post.author}" th:if="${#authorization.expression('hasAuthority(''AUTHOR'')')}"></p>
+	<p style="padding-left:5%;"><input type="text" name="title" th:value="${post.title}" required style="width: 1100px; height: 30px;"></p>
+	<p style="padding-left:5%;"><input type="text" name="tag" th:value="${tag}"  required style="width: 1100px; height: 30px;"></p>
+	<p style="padding-left:5%;"><textarea minlength="60" rows="25" cols="135" name="content" th:text="${post.content}" ></textarea></p>
+	<p style="text-align:center;"><input type="submit" value="Publish" th:if="${post.author == #authentication.name or #authorization.expression('hasAuthority(''ADMIN'')')}"></p>
+</form>
+</body>
+</html>
+
+
+
